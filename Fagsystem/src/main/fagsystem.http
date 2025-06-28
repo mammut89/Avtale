@@ -1,0 +1,16 @@
+POST http://localhost:8081/api/avtale
+Content-Type: application/json
+
+{
+  "kundeNummer": "1"
+}
+
+###
+POST http://localhost:8081/api/kunde
+Content-Type: application/json
+
+{
+  "fnr" : "125345555"
+}
+
+###

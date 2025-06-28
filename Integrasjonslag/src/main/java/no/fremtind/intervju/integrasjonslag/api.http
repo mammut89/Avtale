@@ -1,0 +1,8 @@
+POST http://localhost:8080/api/opprettavtale
+Content-Type: application/json
+
+{
+  "fnr": "123"
+}
+
+###
