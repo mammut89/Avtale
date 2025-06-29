@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static no.intervju.fagsystem.controller.model.AvtaleStatus.SENDT;
 import static no.intervju.fagsystem.controller.model.AvtaleType.FORSIKRING;
@@ -37,7 +38,7 @@ class FagsystemControllerTest {
     @Test
     void opprettKunde_ok() throws Exception {
         OpprettKundeRequest request = new OpprettKundeRequest("12345678901", "Ola", "Nordmann", "99999999");
-        Mockito.when(fagsystemService.hentKundenummer(any())).thenReturn("1");
+        Mockito.when(fagsystemService.hentKundenummer(any())).thenReturn(Optional.of("1"));
 
         mockMvc.perform(post("/api/kunde")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -48,7 +49,7 @@ class FagsystemControllerTest {
 
     @Test
     void opprettAvtale_ok() throws Exception {
-        OpprettAvtaleRequest request = new OpprettAvtaleRequest(1L, FORSIKRING, LocalDateTime.now(), LocalDateTime.now().plusMonths(12));
+        OpprettAvtaleRequest request = new OpprettAvtaleRequest(1L, LocalDateTime.now(), LocalDateTime.now().plusMonths(12), "XY 99999");
         Mockito.when(fagsystemService.hentAvtalenummer(any())).thenReturn(1L);
 
         mockMvc.perform(post("/api/avtale")

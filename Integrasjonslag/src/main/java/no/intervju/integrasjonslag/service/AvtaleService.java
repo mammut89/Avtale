@@ -33,12 +33,11 @@ public class AvtaleService {
     }
 
     public OpprettAvtaleResponse opprettAvtale(OpprettAvtaleRequest request) {
-        // opprett kunde
         Long kundenummer = opprettKunde(new OpprettKundeRequest(
-                request.getFnr(),
-                request.getFornavn(),
-                request.getEtternavn(),
-                request.getTelefonnummer())
+                request.fnr(),
+                request.fornavn(),
+                request.etternavn(),
+                request.telefonnummer())
         );
         logger.info("Opprettet kunde med kundenummer: {}", kundenummer);
 
@@ -46,7 +45,8 @@ public class AvtaleService {
                 kundenummer,
                 FORSIKRING,
                 LocalDateTime.now(),
-                LocalDateTime.now().plusMonths(12))
+                LocalDateTime.now().plusMonths(12),
+                request.registreringsnummer())
         );
         logger.info("Opprettet avtale med avtalenummer: {}", avtaleNummer);
 

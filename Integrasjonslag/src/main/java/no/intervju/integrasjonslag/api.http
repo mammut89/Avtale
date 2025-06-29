@@ -2,7 +2,8 @@ POST http://localhost:8080/api/opprettavtale
 Content-Type: application/json
 
 {
-  "fnr": "123"
+  "fnr": "123",
+  "registreringsnummer": "XY 99999"
 }
 
 ###

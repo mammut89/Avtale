@@ -28,33 +28,35 @@ public class FagsystemService {
     }
 
     public void opprettKunde(OpprettKundeRequest request) {
-        if(kundeRepository.findByFnr(request.getFnr()).isEmpty()) {
+        if(kundeRepository.findByFnr(request.fnr()).isEmpty()) {
             Kunde entity = new Kunde();
-            entity.setFnr(request.getFnr());
+            entity.setFnr(request.fnr());
             kundeRepository.save(entity);
         }
     }
 
-    public String hentKundenummer(OpprettKundeRequest request) {
-        return kundeRepository.findByFnr(request.getFnr())
+    public Optional<String> hentKundenummer(String fnr) {
+        return kundeRepository.findByFnr(fnr)
                 .stream()
                 .findFirst()
-                .map(kunde -> String.valueOf(kunde.getId()))
-                .orElse(null);
+                .map(kunde -> String.valueOf(kunde.getId()));
     }
 
     /**
-     * Fix så det ikke er mulig å lage flere avtale når det allerede er en opprettet avtale som ikke har passert sluttdato
+     * Fix så det ikke er mulig å lage flere avtaler på samme registreringsnummer når det allerede er en avtale som ikke har passert sluttdato
      */
     public void opprettAvtale(OpprettAvtaleRequest request) {
-        Avtale entity = new Avtale();
-        entity.setKundeId(request.getKundeNummer());
-        entity.setAvtaleStatus(AvtaleStatus.OPPRETTET);
-        avtaleRepository.save(entity);
+        Avtale avtale = new Avtale();
+        avtale.setKundeId(request.kundeNummer());
+        avtale.setAvtaleStatus(AvtaleStatus.OPPRETTET);
+        avtale.setRegistreringsnummer(request.registreringsnummer());
+        avtale.setStartDato(request.startDato());
+        avtale.setSluttDato(request.startDato());
+        avtaleRepository.save(avtale);
     }
 
     public Long hentAvtalenummer(OpprettAvtaleRequest request) {
-        return avtaleRepository.findByKundeId(request.getKundeNummer())
+        return avtaleRepository.findByKundeId(request.kundeNummer())
                 .stream()
                 .findFirst()
                 .map(Avtale::getId)
@@ -68,12 +70,12 @@ public class FagsystemService {
     }
 
     public void oppdaterUtsendelseStatus(OppdaterAvtaleStatusRequest request) {
-        avtaleRepository.findById(request.getAvtaleNummer())
+        avtaleRepository.findById(request.avtaleNummer())
                 .ifPresentOrElse(avtale -> {
-                    avtale.setAvtaleStatus(request.getAvtaleStatus());
+                    avtale.setAvtaleStatus(request.avtaleStatus());
                     avtaleRepository.save(avtale);
                 }, () -> {
-                    throw new EntityNotFoundException("Fant ingen avtale med id " + request.getAvtaleNummer());
+                    throw new EntityNotFoundException("Fant ingen avtale med id " + request.avtaleNummer());
                 });
     }
 
